@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:mvc="http://www.springframework.org/schema/mvc"
+	xmlns:context="http://www.springframework.org/schema/context" xmlns:tx="http://www.springframework.org/schema/tx"
+	xsi:schemaLocation="
+          http://www.springframework.org/schema/beans
+          http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+          http://www.springframework.org/schema/mvc
+          http://www.springframework.org/schema/mvc/spring-mvc-3.0.xsd
+          http://www.springframework.org/schema/context
+          http://www.springframework.org/schema/context/spring-context-3.0.xsd
+          http://www.springframework.org/schema/tx
+          http://www.springframework.org/schema/tx/spring-tx-3.0.xsd">
+	<mvc:annotation-driven />
+	
+
+
+	<tx:annotation-driven transaction-manager="transactionManager" />
+	<bean id="transactionManager"
+		class="org.springframework.orm.hibernate3.HibernateTransactionManager">
+		<property name="sessionFactory" ref="sessionFactory" />
+	</bean>
+	<context:component-scan base-package="com.virtusa.learn"></context:component-scan>
+	<context:property-placeholder location="classpath:database.properties"></context:property-placeholder>
+
+	<mvc:resources mapping="/resources/**" location="/resources/"></mvc:resources>
+	<bean id="sessionFactory"
+		class="org.springframework.orm.hibernate3.annotation.AnnotationSessionFactoryBean">
+		<property name="dataSource" ref="dataSource"></property>
+		<property name="annotatedClasses">
+			<list>
+				<value>com.virtusa.learn.model.Admin</value>
+				<value>com.virtusa.learn.model.Learner</value>
+				<value>com.virtusa.learn.model.Enabler</value>
+				<value>com.virtusa.learn.model.Course</value>
+			</list>
+		</property>
+		<property name="hibernateProperties">
+			<props>
+				<prop key="hibernate.dialect">${hibenate.dialect}</prop>
+				<prop key="hibernate.show_sql">${hibernate.show_sql}</prop>
+				<prop key="hibernate.ddl2hbm.auto">${hibernate.ddl2hbm.auto}</prop>
+			</props>
+		</property>
+	</bean>
+	<bean id="dataSource"
+		class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+		<property name="driverClassName" value="${hibernate.driverClass}"></property>
+		<property name="url" value="${hibernate.url}"></property>
+		<property name="username" value="${hibernate.user}"></property>
+		<property name="password" value="${hibernate.password}"></property>
+	</bean>
+	<bean id="viewResolver"
+		class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+		<property name="prefix" value="/WEB-INF/views/"></property>
+		<property name="suffix" value=".jsp"></property>
+	</bean>
+
+
+
+	<bean id="learnerService" class="com.virtusa.learn.service.LearnerServiceImpl"></bean>
+	<bean id="learnerDAO" class="com.virtusa.learn.dao.LearnerDAOImpl"></bean>
+
+	<bean id="enablerService" class="com.virtusa.learn.service.EnablerServiceImpl"></bean>
+	<bean id="enablerDAO" class="com.virtusa.learn.dao.EnablerDAOImpl"></bean>
+
+	<bean id="adminService" class="com.virtusa.learn.service.AdminServiceImpl"></bean>
+	<bean id="adminDAO" class="com.virtusa.learn.dao.AdminDAOImpl"></bean>
+
+	<bean id="courseService" class="com.virtusa.learn.service.CourseServiceImpl"></bean>
+	<bean id="courseDAO" class="com.virtusa.learn.dao.CourseDAOImpl"></bean>
+
+
+
+
+	<bean id="templateBean" class="org.springframework.orm.hibernate3.HibernateTemplate">
+		<property name="sessionFactory" ref="sessionFactory"></property>
+	</bean>
+
+	<bean id="multipartResolver"
+		class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+
+	</bean>
+
+</beans>         
